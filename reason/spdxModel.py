@@ -7,7 +7,8 @@ class packages(Model):
     name = TextField()
     version = TextField()
     comment = TextField()
-    
+    sha1 = TextField()
+
     class Meta:
         database = spdxdb
 
