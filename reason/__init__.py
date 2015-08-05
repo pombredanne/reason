@@ -11,12 +11,18 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app =  Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(60)
 
+nvdDb = 'sqlite:///' + os.path.join(basedir, 'db/nvd.vulnerabilities.db')
 userDb = 'sqlite:///' + os.path.join(basedir, 'db/reasonUser.db')
 spdxDb = 'postgresql://spdx:spdx@host:5432/spdx'
 
+# Initial URI was for searching from NVD Database, Made changes to connect to Users db using binds
+# App.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'nvd.vulnerabilities.db')
+
 databases = {
+    'nvdDb': nvdDb,
     'userDb': userDb,
-    'spdxDb': spdxDb    
+    'spdxDb': spdxDb
+    
 }
 
 
