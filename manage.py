@@ -1,5 +1,4 @@
 from reason import app, db
-from reason import nvdSearch
 from reason.models import User, Report
 from reason import views
 from flask.ext.script import Manager, prompt_bool, Server

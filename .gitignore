@@ -1,0 +1,5 @@
+*.py[cod]
+*.db
+*.xml
+target/
+*.jip_index

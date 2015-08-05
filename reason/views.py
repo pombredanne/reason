@@ -5,7 +5,6 @@ from formgen import pomxmlForm, LoginForm, SignupForm, searchForm
 from reason import app, db, login_manager
 from reason import ALLOWED_EXTENSIONS
 from reason import basedir
-import nvdSearch
 from models import User, Report
 from flask_login import login_required, login_user, logout_user, current_user
 from validfile import validateFile
