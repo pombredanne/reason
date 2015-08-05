@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "form_macro.html" import render_field %}
+
+{% block title %}
+Search
+{%  endblock %}
+
+{% block content %}
+    <section>
+        <h1>Search</h1>
+        <form action="" method="post">
+            {{form.hidden_tag()}}
+            <table>
+                {{ render_field(form.searchCont, size=80) }}
+                {{ render_field(form.actions) }}        
+        		{{ render_field(form.startSearch) }}
+            </table>
+        </form>
+	{% if searchresults  %}
+	    {{ searchresults }} 
+	{% else %}
+	No results
+	{% endif %}
+	
+
+    </section>
+{% endblock %}
+
+

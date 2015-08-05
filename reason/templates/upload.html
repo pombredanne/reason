@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% from "form_macro.html" import render_field %}
+
+
+{% block title %}
+Upload
+{%  endblock %}
+
+{% block content %}
+    <section>
+        <h1>Add a new File</h1>
+        <form action="" method="post" enctype=multipart/form-data>
+         {{form.hidden_tag()}}  
+	 <table>
+		{{  render_field(form.pomxml) }}
+		{{   render_field(form.description, size=50) }}
+               <tr><td>Upload pom.xml or a jar file with Descriptive text</td></tr>
+	        <tr>
+			<td><button type="submit">Upload</button>
+			</td>
+		</tr>
+	       
+         </table>
+        </form>
+         
+    </section>
+{% endblock %}
+
