@@ -6,52 +6,49 @@ The Reason - Data Acquired
 
 {% block content %}
 
-    <table style="width:60%">
+    <table>
         <tr>
-            <td><h1>CPEs found</h1></td>
+            <td><h3>Name</h3></td>
+            <td><h3>Version</h3></td>
+            <td><h3>Licenses</h3></td>
+            <td><h3>CPEs</h3></td>
+            <td><h3>CVEs</h3></td>
         </tr>
-        {% for x in cpe %}
-            {% if x %}
+        {% if results %}
+            {% for item in results %}    
                 <tr>
-                    <td>{{ x }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.version }}</td>
+                    <td>
+                        {% for license in  item.licenses %}
+                            {{ license.short_name }}
+                            {{ license.name }}
+                            {{ license.found_count }}
+                            <br />
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for cpe in item.cpes %}
+                            {{ cpe.cpe }}
+                            <br/>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for cve in item.cves %}
+                            {% if cve %}
+                                {% for c in cve %}
+                                    {{ c }}
+                                    <br />
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 </tr>
-            {% endif %}
-        {% endfor %}        
+            {% endfor %}
+        {% else %}
+            <tr><td>No Data</td></tr>
+        {% endif %}
     </table>
-    <br/>
-    <br/>
-
-    
-    <table style="width:60%">
-        <tr>
-            <td><h1>License Info</h1></td>
-        </tr>
-        {% for x in lic %}
-            {% if x %}
-                <tr>
-                    <td>{{ x }}</td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-    <br/>
-    <br/>
-
-
-    <table style="width:60%">
-        <tr>
-            <td><h1>CVEs found</h1></td>
-        </tr>
-        {% for x in cve %}
-            {% if x %}
-                <tr>
-                    <td>{{ x }}</td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-    <br/>
-    <br/>
 
 {% endblock %}
 

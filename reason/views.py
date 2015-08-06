@@ -15,6 +15,8 @@ from searchvFeed import searchText
 from vfeedWarp import search as searchfor
 from callsocs import callsocs
 
+
+
 ###############################
 ### Custom Functions go here###
 ###############################
@@ -146,15 +148,11 @@ def signup():
 @login_required
 def data():
     if(upload_stat):
-        resultstodata=callsocs(upload_file)
-        licenses = resultstodata[3]
-        pack_id = resultstodata[0]
-        cpes = resultstodata[5]
-        cves = resultstodata[6]
+        results=callsocs(upload_file)
     else:
-        resultstodata = None
+        results = []
         
-    return render_template('data.html', pac = pack_id, lic= licenses,cpe=cpes, cve=cves)
+    return render_template('data.html', results=results)
     
 #404 Response
 @app.errorhandler(404)
