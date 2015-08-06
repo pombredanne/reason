@@ -17,8 +17,8 @@ from models import User
 
 #Form for uploading Pom.xml or Jar File for scanning
 class pomxmlForm(Form):
-    pomxml = FileField('pomxml', validators=[DataRequired(), FileAllowed(['xml', 'jar'], 'xml & jars only!')])
-    description = StringField('description', validators=[DataRequired(), Length(5,30), Regexp(r'^[A-Za-z0-9:_-]',message=r"Describe with characters [a-z] [A-Z] [0-9] [:_-]")])
+    pomxml = FileField('pom.xml', validators=[DataRequired(), FileAllowed(['xml'], 'xml only!')])
+    description = StringField('Description', validators=[Length(0,30), Regexp(r'^[A-Za-z0-9:_-]*',message=r"Describe with characters [a-z] [A-Z] [0-9] [:_-]")])
 	  
    	
 #Search Form
