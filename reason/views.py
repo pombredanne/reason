@@ -39,12 +39,16 @@ def load_user(id):
 def index():
     return render_template('index.html', dependencyTitle="Reason", dependencyText="Software License and Security articat")
 
+upload_stat = False
+upload_file = ''
 
 #Upload page route and Upload Definition
 @login_required
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    global upload_stat
+    global upload_file
     form = pomxmlForm()
     if form.validate_on_submit():
         filename = secure_filename(form.pomxml.data.filename)
@@ -55,7 +59,9 @@ def upload():
             flash("File has been uploaded")
             flash(filename + " is being scannned")
             #Temporary - Callsocs results
-            return redirect(url_for('data', results=callsocs(saveAs)))
+            upload_stat=True
+            upload_file = saveAs
+            return redirect(url_for('data'))
         else:
             flash('Invalid File')
     else:
@@ -136,11 +142,20 @@ def signup():
     return render_template('signup.html', form=form)
 
 # Wiki page route
-@app.route('/data')
+@app.route('/data', methods=["GET", "POST"])
 @login_required
 def data():
-    return render_template('data.html')
-
+    if(upload_stat):
+        resultstodata=callsocs(upload_file)
+        licenses = resultstodata[3]
+        pack_id = resultstodata[0]
+        cpes = resultstodata[5]
+        cves = resultstodata[6]
+    else:
+        resultstodata = None
+        
+    return render_template('data.html', pac = pack_id, lic= licenses,cpe=cpes, cve=cves)
+    
 #404 Response
 @app.errorhandler(404)
 @login_required

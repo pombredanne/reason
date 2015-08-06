@@ -24,7 +24,7 @@ databases = {
 
 app.config['SQLALCHEMY_BINDS'] = databases
 # Debug configuration
-app.config['DEBUG'] = False
+app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()

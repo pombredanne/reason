@@ -3,6 +3,10 @@ from spdxModel import licenses, packages_files, files_licenses
 import json
 from peewee import JOIN, fn
 from pprint import pprint
+from itertools import groupby
+from collections import namedtuple
+
+FoundLicense = namedtuple('FoundLicense', ['short_name', 'name', 'found_count'])
 
 
 def spdxsearch(package_ids):
@@ -20,7 +24,7 @@ def spdxsearch(package_ids):
         .join(packages_files, on=packages_files.package_id)
         .join(files,on=packages_files.file_id)
         .join(files_licenses, JOIN.LEFT_OUTER, on=files_licenses.file_id)
-        .join(licenses, JOIN.LEFT_OUTER, on=files_licenses.license_id)
+        .join(licenses, on=files_licenses.license_id)
         .group_by(packages.package_id, packages.name, packages.version, packages.comment, licenses.short_name, packages.sha1, licenses.name)
         .order_by(packages.package_id, packages.name)
         .where(packages.package_id.in_(package_ids))
@@ -44,4 +48,24 @@ def spdxsearch(package_ids):
                 'license_found_count': row.license_found_count
                 }
             data.append(row_data)
-    return data
+    data.sort(key=lambda x: (x['package_id'], x['name'], x['version'], x['cpes']))
+    newdata = []
+    for key, group in groupby(data, lambda x: (x['package_id'], x['name'], x['version'], x['cpes'])):
+        #print(key)
+        newrow = {
+            'package_id': key[0],
+            'name': key[1],
+            'version': key[2],
+            'cpes': key[3],
+            'licenses': [
+                FoundLicense(
+                    thing['license_short_name'],
+                    thing['license_full_name'],
+                    thing['license_found_count'],
+                    )
+                for thing in group
+                ]
+            }
+        newdata.append(newrow)
+    return newdata
+

@@ -6,13 +6,53 @@ The Reason - Data Acquired
 
 {% block content %}
 
-    <table>
-        {% if results %} 
-            {{results}}
-        {% else %}
-        
-        {% endif %}
+    <table style="width:60%">
+        <tr>
+            <td><h1>CPEs found</h1></td>
+        </tr>
+        {% for x in cpe %}
+            {% if x %}
+                <tr>
+                    <td>{{ x }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}        
     </table>
+    <br/>
+    <br/>
+
+    
+    <table style="width:60%">
+        <tr>
+            <td><h1>License Info</h1></td>
+        </tr>
+        {% for x in lic %}
+            {% if x %}
+                <tr>
+                    <td>{{ x }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <br/>
+    <br/>
+
+
+    <table style="width:60%">
+        <tr>
+            <td><h1>CVEs found</h1></td>
+        </tr>
+        {% for x in cve %}
+            {% if x %}
+                <tr>
+                    <td>{{ x }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <br/>
+    <br/>
+
 {% endblock %}
 
 {% block sidebar %}
