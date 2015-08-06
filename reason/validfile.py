@@ -1,11 +1,10 @@
-import magic
+from lxml import etree
 
 def validateFile(fileUpload):
-    filetype = magic.Magic(mime=True)
-    filetypeText = filetype.from_file(fileUpload)
-    if filetypeText == 'application/xml' or filetypeText == 'application/zip':
-    	return "Good"
+    try:
+        tree = etree.parse(fileUpload)
+        return "Good"
 
-    else:
+    except Exception:
     	return None
 	
