@@ -40,6 +40,7 @@ def callsocs(workdir, xmlfile):
     for item in spdx_query_results:
         cves = []
         for cpe in item['cpes']:
-            cves.append(search(cpe['cpe'], 'cve'))
+            print cpe['cpe'][1:-1] 
+            cves.append(search(cpe['cpe'][1:-1], 'cve'))
         item['cves'] = cves
     return list(sorted(spdx_query_results, key=lambda x: (x['name'], x['version'])))
