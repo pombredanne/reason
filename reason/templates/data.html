@@ -6,34 +6,32 @@ The Reason - Data Acquired
 
 {% block content %}
 
-    <table>
+    <table style="border:1px solid black;border-collapse:collapse;width:100%;">
         <tr>
-            <td><h3>Name</h3></td>
-            <td><h3>Version</h3></td>
-            <td><h3>Licenses</h3></td>
-            <td><h3>CPEs</h3></td>
-            <td><h3>CVEs</h3></td>
+            <td style="border:1px solid black;padding:5px;"><h3>Name</h3></td>
+            <td style="border:1px solid black;padding:5px;"><h3>Version</h3></td>
+            <td style="border:1px solid black;padding:5px;"><h3>Licenses</h3></td>
+            <td style="border:1px solid black;padding:5px;"><h3>CPEs</h3></td>
+            <td style="border:1px solid black;padding:5px;"><h3>CVEs</h3></td>
         </tr>
         {% if results %}
             {% for item in results %}    
                 <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.version }}</td>
-                    <td>
+                    <td style="border:1px solid black;padding:5px;">{{ item.name }}</td>
+                    <td style="border:1px solid black;padding:5px;">{{ item.version }}</td>
+                    <td style="border:1px solid black;padding:5px;">
                         {% for license in  item.licenses %}
-                            {{ license.short_name }}
-                            {{ license.name }}
-                            {{ license.found_count }}
+                            {{ license.short_name }} ({{ license.found_count }})
                             <br />
                         {% endfor %}
                     </td>
-                    <td>
+                    <td style="border:1px solid black;padding:5px;">
                         {% for cpe in item.cpes %}
                             {{ cpe.cpe }}
                             <br/>
                         {% endfor %}
                     </td>
-                    <td>
+                    <td style="border:1px solid black;padding:5px;">
                         {% for cve in item.cves %}
                             {% if cve %}
                                 {% for c in cve %}
@@ -46,7 +44,7 @@ The Reason - Data Acquired
                 </tr>
             {% endfor %}
         {% else %}
-            <tr><td>No Data</td></tr>
+            <tr><td style="border:1px solid black;padding:5px;">No Data</td></tr>
         {% endif %}
     </table>
 

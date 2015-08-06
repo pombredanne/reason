@@ -15,6 +15,16 @@ from searchvFeed import searchText
 from vfeedWarp import search as searchfor
 from callsocs import callsocs
 
+from contextlib import contextmanager
+import tempfile
+import os
+import shutil
+
+@contextmanager
+def TemporaryDirectory():
+    path = tempfile.mkdtemp()
+    yield path
+    shutil.rmtree(path, ignore_errors=True)
 
 
 ###############################
@@ -41,29 +51,23 @@ def load_user(id):
 def index():
     return render_template('index.html', dependencyTitle="Reason", dependencyText="Software License and Security articat")
 
-upload_stat = False
-upload_file = ''
-
 #Upload page route and Upload Definition
 @login_required
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
-    global upload_stat
-    global upload_file
     form = pomxmlForm()
     if form.validate_on_submit():
         filename = secure_filename(form.pomxml.data.filename)
-        saveAs = basedir + '/uploads/'+ filename
-        form.pomxml.data.save(saveAs)
-        filesign = validateFile(basedir+'/uploads/'+form.pomxml.data.filename)
-        if (filesign== "Good"):
-            #Temporary - Callsocs results
-            upload_stat=True
-            upload_file = saveAs
-            return redirect(url_for('data'))
-        else:
-            flash('Invalid file')
+        with TemporaryDirectory() as tempdir:
+            saveAs = os.path.abspath(os.path.join(tempdir, filename))
+            form.pomxml.data.save(saveAs)
+            filesign = validateFile(saveAs)
+            if filesign == "Good":
+                results = callsocs(tempdir, saveAs)
+                return render_template('data.html', results=results)
+            else:
+                flash('Invalid file')
 	
     return render_template('upload.html', form=form)
 
@@ -136,20 +140,6 @@ def signup():
 	
     return render_template('signup.html', form=form)
 
-# Wiki page route
-@app.route('/data', methods=["GET", "POST"])
-@login_required
-def data():
-    global upload_stat
-    global upload_file
-    if(upload_stat):
-        results=callsocs(upload_file)
-        upload_stat = False
-        upload_file = ''    
-    else:
-        results = []
-        
-    return render_template('data.html', results=results)
     
 #404 Response
 @app.errorhandler(404)

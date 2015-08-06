@@ -6,21 +6,35 @@ from scan_jars import scan_jars
 from spdxsearch  import spdxsearch
 from vfeedWarp import search
 
-def callsocs(xmlfile):
+import tempfile
+import os
+import shutil
+from contextlib import contextmanager
+import subprocess
+
+@contextmanager
+def TemporaryDirectory():
+    path = tempfile.mkdtemp()
+    yield path
+    shutil.rmtree(path, ignore_errors=True)
+
+
+@contextmanager
+def ChDir(new_dir):
+    old_dir = os.getcwd()
+    os.chdir(new_dir)
+    yield
+    os.chdir(old_dir)
+
+
+def callsocs(workdir, xmlfile):
     print "[+] starting"
-
-    project_groupID = "com.ushan"
-    project_artifactId = "HelloWorld"
-    project_version = "1.0.0-SNAPSHOT"
-
-    g, a, v = xmlparser(xmlfile)
-    
-    print "[+] Parsing done"
-    create_pom_xml(project_groupID, project_artifactId, project_version, g, a, v)
+    os.rename(xmlfile, os.path.join(workdir, 'pom.xml'))
     print "[+] Created pom.xml"
-    invokeMaven()
+    with ChDir(workdir):
+        subprocess.check_call(['mvn', 'dependency:copy-dependencies'])
     print "[+] Maven Invocation done"
-    package_ids = list(scan_jars('target/dependency'))
+    package_ids = list(scan_jars(os.path.join(workdir, 'target/dependency')))
     spdx_query_results = spdxsearch(package_ids) 
     print "[+] DoSocs2 and Dependency-Check Done"
     for item in spdx_query_results:
@@ -28,5 +42,4 @@ def callsocs(xmlfile):
         for cpe in item['cpes']:
             cves.append(search(cpe['cpe'], 'cve'))
         item['cves'] = cves
-    return spdx_query_results
-
+    return list(sorted(spdx_query_results, key=lambda x: (x['name'], x['version'])))
