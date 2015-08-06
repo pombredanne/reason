@@ -32,13 +32,11 @@ The Reason - Data Acquired
                         {% endfor %}
                     </td>
                     <td style="border:1px solid black;padding:5px;">
-                        {% for cve in item.cves %}
-                            {% if cve %}
-                                {% for c in cve %}
-                                    {{ c }}
-                                    <br />
-                                {% endfor %}
-                            {% endif %}
+
+                        {% for cve_name, cvss_score in item.cves %}
+                    
+                              {{ cve_name }} (Score: {{ cvss_score }})
+                              <br />
                         {% endfor %}
                     </td>
                 </tr>

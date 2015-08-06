@@ -22,7 +22,9 @@ class nvd_db(Model):
     cvss_confidentiality_impact = TextField()
     cvss_integrity_impact = TextField()
     cvss_availability_impact = TextField()
-
+    
+    class Meta:
+        database=db
 
 class cve_cpe(Model):
     cpeid = TextField(primary_key=True)

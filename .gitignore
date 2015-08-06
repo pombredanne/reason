@@ -3,3 +3,4 @@
 *.xml
 target/
 *.jip_index
+*.sw[opnm]

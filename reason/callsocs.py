@@ -38,9 +38,15 @@ def callsocs(workdir, xmlfile):
     spdx_query_results = spdxsearch(package_ids) 
     print "[+] DoSocs2 and Dependency-Check Done"
     for item in spdx_query_results:
-        cves = []
+        cves_cvss = []
         for cpe in item['cpes']:
-            print cpe['cpe'][1:-1] 
-            cves.append(search(cpe['cpe'][1:-1], 'cve'))
-        item['cves'] = cves
+            cves = search(cpe['cpe'][1:-1], 'cve')
+            #cvss_score = search(cve, 'cvss')
+            for cve in cves:
+                if cve:
+                    cvss_score = search(cve, 'cvss')
+                print (cve, cvss_score)
+                cves_cvss.append((cve, cvss_score))
+        item['cves'] = cves_cvss
+
     return list(sorted(spdx_query_results, key=lambda x: (x['name'], x['version'])))

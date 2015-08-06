@@ -25,7 +25,7 @@ def search(userInput, what_with_input):
               Returns CWE(s) associated with the CVE
     '''
     
-    assert what_with_input in ['cpe', 'cwe', 'cve', 'exp']
+    assert what_with_input in ['cpe', 'cwe', 'cve', 'exp', 'cvss']
     
     cve_verify = cveInfoSanitize()
     cpe_verify = cpeInfoSanitize()
@@ -72,6 +72,15 @@ def search(userInput, what_with_input):
             result = ''
             return []
     
+    elif action == 'cvss':
+        result = cve_verify.cleanseCVE(inp)
+        if result == "Pass":
+            result = ''
+            return search_for_cvss_by_cve(inp)
+        else:
+            result = ''
+            return "No Score"
+        
     else:
         return []
          
@@ -89,7 +98,9 @@ def search_for_cve_by_cpe(cpe):
 # Takes CVE and gives CPEs - Vulnerability tied to multiple products
 def search_for_cpe_by_cve(cve):
     cpes = []
-    cves = cve    
+    cves = cve
+    cvss = []
+        
     for x in cve_cpe.select(cve_cpe.cpeid).join(nvd_db).where(nvd_db.cveid == cve):
         cpes.append(x.cpeid)
     return cpes
@@ -100,11 +111,14 @@ def search_for_cwe_by_cve(cve):
 
     cwes = []
 
-    for x in cve_cwe.select(cve_cwe.cweid).join(nvd_db).where(nvd_db.cveid ==cve):
+    for x in cve_cwe.select(cve_cwe.cweid).join(nvd_db, on=nvd_db.cveid):
         cwes.append(x.cweid)
     return(cwes)
 
-
+def search_for_cvss_by_cve(cve):
+  
+    for x in nvd_db.select(nvd_db.cvss_base).where(nvd_db.cveid==cve):
+        return x.cvss_base
         
 # Takes CVEs and gives Exploit DB ID associated with the CVEs
 def search_for_exploit_by_cve(cve):
