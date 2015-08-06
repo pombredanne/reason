@@ -147,8 +147,12 @@ def signup():
 @app.route('/data', methods=["GET", "POST"])
 @login_required
 def data():
+    global upload_stat
+    global upload_file
     if(upload_stat):
         results=callsocs(upload_file)
+        upload_stat = False
+        upload_file = ''    
     else:
         results = []
         
