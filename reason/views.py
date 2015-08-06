@@ -58,16 +58,12 @@ def upload():
         form.pomxml.data.save(saveAs)
         filesign = validateFile(basedir+'/uploads/'+form.pomxml.data.filename)
         if (filesign== "Good"):
-            flash("File has been uploaded")
-            flash(filename + " is being scannned")
             #Temporary - Callsocs results
             upload_stat=True
             upload_file = saveAs
             return redirect(url_for('data'))
         else:
-            flash('Invalid File')
-    else:
-        flash('Invalid File')
+            flash('Invalid file')
 	
     return render_template('upload.html', form=form)
 
@@ -77,15 +73,12 @@ def upload():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-	user = User.get_by_username(form.username.data)
-	if user is not None and user.check_password(form.password.data):
-	    login_user(user, form.remember_me.data)
-	    flash("Logged in as {}".format(user.username))
-	    return redirect(request.args.get('next') or url_for('user', username=user.username))
+        user = User.get_by_username(form.username.data)
+        if user is not None and user.check_password(form.password.data):
+	        login_user(user, form.remember_me.data)
+	        return redirect(request.args.get('next') or url_for('user', username=user.username))
 	else:
 	    flash("Generous Monkey banging QWERTY! OR maybe a bruteforce attempt!")
-    else:
-	flash("Password reset? Reach the admin!")
     return render_template("login.html", form = form)
 
 # User logout
