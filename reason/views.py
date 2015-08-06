@@ -64,7 +64,7 @@ def upload():
             form.pomxml.data.save(saveAs)
             filesign = validateFile(saveAs)
             if filesign == "Good":
-                results = callsocs(saveAs)
+                results = callsocs(tempdir, saveAs)
                 return render_template('data.html', results=results)
             else:
                 flash('Invalid file')

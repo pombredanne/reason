@@ -27,15 +27,14 @@ def ChDir(new_dir):
     os.chdir(old_dir)
 
 
-def callsocs(xmlfile):
+def callsocs(workdir, xmlfile):
     print "[+] starting"
-    with TemporaryDirectory() as workdir:
-        shutil.copyfile(xmlfile, os.path.join(workdir, 'pom.xml'))
-        print "[+] Created pom.xml"
-        with ChDir(workdir):
-            subprocess.check_call(['mvn', 'dependency:copy-dependencies'])
-        print "[+] Maven Invocation done"
-        package_ids = list(scan_jars(os.path.join(workdir, 'target/dependency')))
+    os.rename(xmlfile, os.path.join(workdir, 'pom.xml'))
+    print "[+] Created pom.xml"
+    with ChDir(workdir):
+        subprocess.check_call(['mvn', 'dependency:copy-dependencies'])
+    print "[+] Maven Invocation done"
+    package_ids = list(scan_jars(os.path.join(workdir, 'target/dependency')))
     spdx_query_results = spdxsearch(package_ids) 
     print "[+] DoSocs2 and Dependency-Check Done"
     for item in spdx_query_results:
