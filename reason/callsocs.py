@@ -1,7 +1,4 @@
-from xml2mavenArtifact import xmlparser
-from create_pom_xml import create_pom_xml
 import itertools
-from invokeMaven import invokeMaven
 from scan_jars import scan_jars
 from spdxsearch  import spdxsearch
 from vfeedWarp import search

@@ -8,10 +8,6 @@ from reason import basedir
 from models import User, Report
 from flask_login import login_required, login_user, logout_user, current_user
 from validfile import validateFile
-# This import is an older search
-from searchvFeed import searchText
-# This is newer version of search is based on vfeedModel and vfeedWarp
-# Using peewee over Flask-SQLAlchemy
 from vfeedWarp import search as searchfor
 from callsocs import callsocs
 
@@ -106,14 +102,6 @@ def search():
     form = searchForm()
     if form.validate_on_submit():
     	text = form.searchCont.data
-	    # Older version search values are in the below two lines 
-        #search_t = searchText()
-	    #print search_t.searchText(text)
-
-        # Older version of search is commented
-	    #return render_template('search.html', form=form, searchresults=search_t.searchText(text))
-        # Newer version of search is based on the vfeedModel
-       # Newer version variable go below
         actionVal = form.actions.data
         return render_template('search.html', form=form, searchresults=searchfor(text, actionVal))
     
